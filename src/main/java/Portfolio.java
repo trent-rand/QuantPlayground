@@ -45,7 +45,7 @@ public class Portfolio {
     private double BTCBalance = 10;
     private double ETHBalance = 10;
 
-    private int position = 0;
+    private double position = 0;
 
 
 
@@ -53,14 +53,14 @@ public class Portfolio {
     Trade activeTrade;
     boolean positionActive = false;
 
-    public void enterPosition(double entryPrice, Date openDate, int side) {
+    public void enterPosition(double entryPrice, Date openDate, double size) {
         if(position == 0) {
             activeTrade = new Trade();
             activeTrade.setEntryPrice(entryPrice);
             activeTrade.setOpenDate(openDate);
-            activeTrade.side = side;
+            activeTrade.size = size;
             positionActive = true;
-            position = side;
+            position = size;
             return;
         } else {
             System.out.println("Attempted to re-enter an already open position.");
@@ -71,7 +71,7 @@ public class Portfolio {
 
     public void exitPosition(double exitPrice, Date closeDate) {
 
-        if(position == 1 || position == -1) {
+        if(position != 0) {
             activeTrade.setExitPrice(exitPrice);
             activeTrade.setCloseDate(closeDate);
 
@@ -87,7 +87,7 @@ public class Portfolio {
 
             System.out.print("Current Balance: "+currentBalance);
 
-            String[] outputToLog = {""+activeTrade.side, ""+activeTrade.EntryPrice, ""+activeTrade.ExitPrice, ""+percentGain, ""+activeTrade.getOpenDate(), ""+activeTrade.getCloseDate(), ""+currentBalance};
+            String[] outputToLog = {""+activeTrade.size, ""+activeTrade.EntryPrice, ""+activeTrade.ExitPrice, ""+percentGain, ""+activeTrade.getOpenDate(), ""+activeTrade.getCloseDate(), ""+currentBalance};
             getInstance().output.addToOutput(1, outputToLog);
 
             positionActive = false;
@@ -113,7 +113,7 @@ public class Portfolio {
         getInstance().delegate = new CoinbaseDelegate();
         getInstance().websocket = new CoinbaseWebsocket();
 
-        getInstance().strategy = new RSIStrategy();
+        getInstance().strategy = new MAStrategy(50,200);
         // getInstance().strategy = new BBStrategy();
         getInstance().exitStrategy = new RollingStopStrategy();
 
@@ -124,7 +124,7 @@ public class Portfolio {
         //getInstance().startForwardTest();
         //getInstance().inputBacktest();
 
-        getInstance().output.SaveSession("Today05");
+        getInstance().output.SaveSession("_Today_Date_Test_Long_Only");
 
     }
 
@@ -156,7 +156,7 @@ public class Portfolio {
     }
 
     private void startBackTest() {
-        long startValue = 1505000000000L;
+        long startValue = 1505000100000L;
         Date begin = new Date(startValue);
         Date end = new Date((startValue) + (900 * 300 * 1000));
 
@@ -204,11 +204,11 @@ public class Portfolio {
         this.ETHBalance = ETHBalance;
     }
 
-    public int getPosition() {
+    public double getPosition() {
         return position;
     }
 
-    public void setPosition(int position) {
+    public void setPosition(double position) {
         this.position = position;
     }
 

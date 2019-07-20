@@ -1,4 +1,3 @@
-import javax.sound.sampled.Port;
 import java.util.ArrayList;
 
 /**
@@ -83,11 +82,11 @@ public class BBStrategy extends Strategy {
                 System.out.println("Current Entry: "+activeTrade.getEntryPrice());
 
                 double percentGain = 0;
-                if(activeTrade.side > 0) {
-                    percentGain = (activeTrade.side * (candle.high - activeTrade.EntryPrice) / activeTrade.EntryPrice * 100); // - 0.2;
+                if(activeTrade.size > 0) {
+                    percentGain = (activeTrade.size * (candle.high - activeTrade.EntryPrice) / activeTrade.EntryPrice * 100); // - 0.2;
 
-                } else if (activeTrade.side < 0) {
-                    percentGain = (activeTrade.side * (candle.low - activeTrade.EntryPrice) / activeTrade.EntryPrice * 100); // - 0.2;
+                } else if (activeTrade.size < 0) {
+                    percentGain = (activeTrade.size * (candle.low - activeTrade.EntryPrice) / activeTrade.EntryPrice * 100); // - 0.2;
 
                 } else { System.out.println("We don't have a trade on?!"); }
                 System.out.println("Unrealized P/L: "+percentGain);

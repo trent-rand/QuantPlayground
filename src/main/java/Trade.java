@@ -8,7 +8,7 @@ public class Trade {
     double EntryPrice = 0.00;
     double ExitPrice = 0.00;
 
-    int side;
+    double size;
 
     Date CloseDate;
     Date OpenDate;

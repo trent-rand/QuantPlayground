@@ -6,18 +6,12 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.TimeZone;
+import java.util.*;
 
 /**
  * Created by TrentRand on 2019-07-17.
  */
 public class CoinbaseDelegate {
-
-
-
 
 
 
@@ -92,12 +86,22 @@ public class CoinbaseDelegate {
 
                             Candlestick tempCandle = new Candlestick();
 
-                            tempCandle.setEndDate(new Date(Integer.parseInt(candle.get(0).toString())));
+                            //Dates are clearly whack upon compliation.//
+                            //So now I gotta do this, I should just use python.//
+                            Long dateLong = Long.decode(candle.get(0).toString());
+                            dateLong = dateLong * 1000;
+                            Date tempDate = new Date(dateLong);
+
+                            //System.out.println("Parsed End Date: "+dateLong);
+
+                            tempCandle.setEndDate(tempDate);
                             tempCandle.low = Double.parseDouble(candle.get(1).toString());
                             tempCandle.high = Double.parseDouble(candle.get(2).toString());
                             tempCandle.open = Double.parseDouble(candle.get(3).toString());
                             tempCandle.close = Double.parseDouble(candle.get(4).toString());
                             tempCandle.volume = Double.parseDouble(candle.get(5).toString());
+
+                            //System.out.println("Saved End Date: "+tempCandle.getEndDate());
 
                             toReturn.add(tempCandle);
                         }
