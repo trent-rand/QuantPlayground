@@ -1,4 +1,5 @@
 import java.io.FileWriter;
+import java.text.SimpleDateFormat;
 
 /**
  * Created by Trent Rand on 09/Feb/18.
@@ -7,6 +8,8 @@ public class CSVOutput {
 
     String sessionLog = "null";
     String tradeLog = "null";
+
+    String priceLog = "null";
 
     public void addToOutput(int LogType, String[] data) {
         switch (LogType) {
@@ -26,13 +29,25 @@ public class CSVOutput {
         }
     }
 
+
+    public void addCandle(Candlestick candle) {
+
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        String dateString = format.format(candle.endDate);
+
+        priceLog = priceLog+candle.close+","+Portfolio.getInstance().currentBalance+","+dateString+"\n";
+
+    }
+
+
+
     public void SaveSession(String date) {
         try {
             String filename = "Session"+date+".csv";
             FileWriter writer = new FileWriter(filename);
-            writer.append(sessionLog.subSequence(0, sessionLog.length()));
+            writer.append(priceLog.subSequence(0, priceLog.length()));
 
-            sessionLog = "null";
+            priceLog = "null";
 
             writer.flush();
             writer.close();

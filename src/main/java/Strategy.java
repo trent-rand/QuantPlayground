@@ -22,7 +22,7 @@ public class Strategy {
 
 
     public void performBacktest(Date start, Date end, String productID) {
-        System.out.println("Performing your backtest...");
+        //System.out.println("Performing your backtest...");
         CoinbaseDelegate delegate = Portfolio.getInstance().getDelegate();
         backTestCandles = delegate.backTest(productID, start, end, granularity);
 

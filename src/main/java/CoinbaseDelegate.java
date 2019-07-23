@@ -33,8 +33,9 @@ public class CoinbaseDelegate {
 
         //System.out.println("Setting Up Request...");
 
-        System.out.println(startAsISO);
-        System.out.println(endAsISO);
+        //TODO: This is wild. Gotta handle Dates better. I don't think this ever gets called anymore.
+        //System.out.println(startAsISO);
+        //System.out.println(endAsISO);
          if(!(endAsISO.substring(endAsISO.length() - 3)).matches(":00")) {
              endAsISO = endAsISO.substring(0, endAsISO.length() - 3) + "00";
              System.out.println("Had to fix the date: "+endAsISO);
@@ -56,8 +57,9 @@ public class CoinbaseDelegate {
 
 
             //"Shoot'er 'cross the bow!"//
-            System.out.println("Successfully Set Up Request!");
-            System.out.println(con.getURL());
+            //System.out.println("Successfully Set Up Request!");
+            System.out.println(con.getURL()+"\n");
+
             con.connect();
 
             //Parse HTTP Response Code//
@@ -92,7 +94,15 @@ public class CoinbaseDelegate {
 
                             Candlestick tempCandle = new Candlestick();
 
-                            tempCandle.setEndDate(new Date(Integer.parseInt(candle.get(0).toString())));
+                            //Dates are clearly whack upon compliation.//
+                            //So now I gotta do this, I should just use python.//
+                            Long dateLong = Long.decode(candle.get(0).toString());
+                            dateLong = dateLong * 1000;
+                            Date tempDate = new Date(dateLong);
+
+                            //System.out.println("Parsed End Date: "+tempDate);
+
+                            tempCandle.setEndDate(tempDate);
                             tempCandle.low = Double.parseDouble(candle.get(1).toString());
                             tempCandle.high = Double.parseDouble(candle.get(2).toString());
                             tempCandle.open = Double.parseDouble(candle.get(3).toString());
@@ -109,10 +119,14 @@ public class CoinbaseDelegate {
 
                     in.close();
 
-                    System.out.println("Returning Complete Candlestick Array!");
+                    //System.out.println("Returning Complete Candlestick Array!");
 
                     Collections.reverse(toReturn);
                     //System.out.println(toReturn);
+
+                    for(int i = 0; i < toReturn.size(); i++) {
+                        Portfolio.getInstance().getOutput().addCandle(toReturn.get(i));
+                    }
 
                     return toReturn;
 

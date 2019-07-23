@@ -1,3 +1,4 @@
+import java.util.Comparator;
 import java.util.Date;
 
 /**
@@ -5,10 +6,14 @@ import java.util.Date;
  */
 public class Trade {
 
+
     double EntryPrice = 0.00;
     double ExitPrice = 0.00;
 
-    int side;
+    double percentGainRaw = 0.00;
+    double percentGainAdjusted = 0.00;
+
+    double size;
 
     Date CloseDate;
     Date OpenDate;
@@ -44,4 +49,22 @@ public class Trade {
     public void setExitPrice(double exitPrice) {
         ExitPrice = exitPrice;
     }
+
+    public double getPercentGainRaw() {
+        return percentGainRaw;
+    }
+
+    public void setPercentGainRaw(double percentGainRaw) {
+        this.percentGainRaw = percentGainRaw;
+    }
+
+    public double getPercentGainAdjusted() {
+        return percentGainAdjusted;
+    }
+
+    public void setPercentGainAdjusted(double percentGainAdjusted) {
+        this.percentGainAdjusted = percentGainAdjusted;
+    }
+
+
 }
