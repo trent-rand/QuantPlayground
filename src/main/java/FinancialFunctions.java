@@ -31,5 +31,11 @@ public class FinancialFunctions {
         return toReturn;
     }
 
+    public double percentDiff(double a, double b) {
+        double toReturn = (a - b) / b * 100;
+
+        return toReturn;
+    }
+
 
 }

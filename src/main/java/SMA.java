@@ -28,4 +28,8 @@ public class SMA {
     public double getAverage() {
         return total / size;
     }
+
+    public int getSize() {
+        return this.size;
+    }
 }

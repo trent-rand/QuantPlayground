@@ -16,9 +16,46 @@ import java.util.TimeZone;
  */
 public class CoinbaseDelegate {
 
+    //testnet.BitMEX.com;
 
 
+    public void enterTrade (int type, double size) {
+        //Type: 0 - market, 1 - Limit, 2 - Stop Market
+        //Defaults to Market base don size.
+        switch (type) {
 
+            case 0:
+
+
+                break;
+            case 1:
+
+
+                break;
+            case 2:
+
+
+                break;
+            default:
+
+
+                break;
+        }
+
+
+    }
+
+    public void exitTrade (Trade trade) {
+
+    }
+
+    public void cancelTrade () {
+
+    }
+
+    public void flatten () {
+
+    }
 
 
     public ArrayList<Candlestick> backTest(String productId, Date startDate, Date endDate, int granularity) {
@@ -26,19 +63,26 @@ public class CoinbaseDelegate {
 
         //Setup Request from Input Arguments
         TimeZone tz = TimeZone.getTimeZone("UTC");
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:SS"); // Quoted "Z" to indicate UTC, no timezone offset
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd"); // Quoted "Z" to indicate UTC, no timezone offset
         df.setTimeZone(tz);
         String startAsISO = df.format(startDate);
         String endAsISO = df.format(endDate);
 
         //System.out.println("Setting Up Request...");
 
-        System.out.println(startAsISO);
-        System.out.println(endAsISO);
-         if(!(endAsISO.substring(endAsISO.length() - 3)).matches(":00")) {
+        //TODO: This is wild. Gotta handle Dates better. I don't think this ever gets called anymore.
+        //System.out.println(startAsISO);
+        //System.out.println(endAsISO);
+         /*if(!(endAsISO.substring(endAsISO.length() - 3)).matches(":00")) {
              endAsISO = endAsISO.substring(0, endAsISO.length() - 3) + "00";
              System.out.println("Had to fix the date: "+endAsISO);
          }
+
+        if(!(startAsISO.substring(startAsISO.length() - 3)).matches(":00")) {
+            startAsISO = startAsISO.substring(0, startAsISO.length() - 3) + "00";
+            System.out.println("Had to fix the date: "+startAsISO);
+        }*/
+
 
         //Setup Base HTTP Request. Catch Errors.
         try {
@@ -56,8 +100,9 @@ public class CoinbaseDelegate {
 
 
             //"Shoot'er 'cross the bow!"//
-            System.out.println("Successfully Set Up Request!");
-            System.out.println(con.getURL());
+            //System.out.println("Successfully Set Up Request!");
+            System.out.println(con.getURL()+"\n");
+
             con.connect();
 
             //Parse HTTP Response Code//
@@ -92,7 +137,15 @@ public class CoinbaseDelegate {
 
                             Candlestick tempCandle = new Candlestick();
 
-                            tempCandle.setEndDate(new Date(Integer.parseInt(candle.get(0).toString())));
+                            //Dates are clearly whack upon compliation.//
+                            //So now I gotta do this, I should just use python.//
+                            Long dateLong = Long.decode(candle.get(0).toString());
+                            dateLong = dateLong * 1000;
+                            Date tempDate = new Date(dateLong);
+
+                            //System.out.println("Parsed End Date: "+tempDate);
+
+                            tempCandle.setEndDate(tempDate);
                             tempCandle.low = Double.parseDouble(candle.get(1).toString());
                             tempCandle.high = Double.parseDouble(candle.get(2).toString());
                             tempCandle.open = Double.parseDouble(candle.get(3).toString());
@@ -109,10 +162,14 @@ public class CoinbaseDelegate {
 
                     in.close();
 
-                    System.out.println("Returning Complete Candlestick Array!");
+                    //System.out.println("Returning Complete Candlestick Array!");
 
                     Collections.reverse(toReturn);
                     //System.out.println(toReturn);
+
+                    for(int i = 0; i < toReturn.size(); i++) {
+                        Portfolio.getInstance().getOutput().addCandle(toReturn.get(i));
+                    }
 
                     return toReturn;
 

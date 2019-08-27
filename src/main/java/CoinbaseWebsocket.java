@@ -42,7 +42,7 @@ public class CoinbaseWebsocket extends TextWebSocketHandler {
 
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(CurrentMinute);
-            calendar.add(Calendar.SECOND, (60 * 15));
+            calendar.add(Calendar.SECOND, (60 * 60)); //Hourly Candles
 
             Date endOfCandle = calendar.getTime();
 
